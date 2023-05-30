@@ -1,7 +1,7 @@
 const {delay} = require('../utils/delay')
+const { create } = require('../database/publications')
 
-
-async function getPubInfluencer(influencer, numPub, page) {
+async function getPubInfluencer(influencer, numPub, page, idInfluencer) {
   // entrando na pagina de influencer
   await page.goto(`https://www.instagram.com/${influencer}/`, { timeout: 0 })
   // pegar x ultimas publicacoes
@@ -22,7 +22,9 @@ async function getPubInfluencer(influencer, numPub, page) {
       const regex = /\/p\//g
 
       if (regex.test(href)) {
-        pubs.push(`https://www.instagram.com${href}`)
+        const link = `https://www.instagram.com${href}`
+        pubs.push(link)
+
       }
 
     }
@@ -39,8 +41,13 @@ async function getPubInfluencer(influencer, numPub, page) {
 
   }
 
+  for (let i = 0; i < pubs.length; i++) {
+    const link = pubs[i];
+    await create(link,idInfluencer)
 
-  return pubs
+  }
+
+
 }
 
 
