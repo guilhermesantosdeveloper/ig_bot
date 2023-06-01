@@ -6,7 +6,8 @@ async function login(email, senha) {
   const browser = await puppeteer.launch({
     userDataDir: './user_data',
     headless: false,
-    executablePath: '/opt/google/chrome/chrome'
+    executablePath: '/opt/google/chrome/chrome',
+    defaultViewport:null
 
   });
   const page = await browser.newPage();

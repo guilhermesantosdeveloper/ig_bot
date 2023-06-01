@@ -3,11 +3,11 @@ const aaSqlite3 = require('aa-sqlite3');
 const pino = require('../log');
 
 
-async function create(link, idInfluencer = null) {
+async function create(link, idInfluencer = null, follow=0) {
   try {
     const db = aaSqlite3(new sqlite3.Database('./database.sqlite3'));
-    const sqlInsert = `INSERT INTO publications(id_influencer, link)
-  VALUES(${idInfluencer}, "${link}")`
+    const sqlInsert = `INSERT OR IGNORE INTO publications(id_influencer, link, follow)
+  VALUES(${idInfluencer}, "${link}", ${follow})`
     await db.run(sqlInsert)
 
 
@@ -72,14 +72,14 @@ async function list() {
 }
 
 
-async function updateById(id, link, idInfluencer = null) {
+async function updateById(id, link, idInfluencer = null, follow=0) {
   try {
     let sqlUptade;
     const db = aaSqlite3(new sqlite3.Database('./database.sqlite3'));
     if (!idInfluencer) {
-      sqlUptade = `UPDATE publications SET link = "${link}" WHERE id = ${id}`
+      sqlUptade = `UPDATE publications SET link = "${link}", follow=${follow} WHERE id = ${id}`
     } else {
-      sqlUptade = `UPDATE publications SET id_influencer = ${idInfluencer}, link = "${link}" WHERE id = ${id}`
+      sqlUptade = `UPDATE publications SET id_influencer = ${idInfluencer}, follow=${follow},link = "${link}" WHERE id = ${id}`
     }
 
     await db.run(sqlUptade);

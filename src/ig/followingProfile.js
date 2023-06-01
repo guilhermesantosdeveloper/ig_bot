@@ -44,15 +44,16 @@ async function getInfosProfile(page) {
 
   let infos = await section.evaluate((e) => {
     let obj = {
-      bio:'',
-      userName:'',
-      nome:'',
-      link:'',
-      category:''
+      bio: '',
+      userName: '',
+      nome: '',
+      link: '',
+      category: ''
     };
     let bio = document.querySelector('h1')
-    let userName = document.querySelector('h2').innerText;
-    if (bio !== null) {
+    let userName = document.querySelector('h2');
+    if (bio !== null && userName !== null) {
+      userName = userName.innerText
       bio = bio.innerText;
       let nome;
       let category;
@@ -86,7 +87,7 @@ async function getInfosProfile(page) {
       let arrBio = bio.split('\n')
       let arrSecaoDeBioDif = arrSecaoDeBio.filter(x => !arrBio.includes(x));
 
-      console.log(arrSecaoDeBioDif);
+      //console.log(arrSecaoDeBioDif);
       nome = arrSecaoDeBioDif[0];
 
       obj.bio = bio;
@@ -110,8 +111,8 @@ async function followingProfilePub(profileUser, page, idPub, followingForMinute)
   let time = (60 / followingForMinute) * 1000
 
 
-
-  await page.goto(profileUser, { timeout: 0 })
+  const link = `https://www.instagram.com/${profileUser}`
+  await page.goto(link, { timeout: 0 })
   await delay(time)
 
 
@@ -124,18 +125,32 @@ async function followingProfilePub(profileUser, page, idPub, followingForMinute)
     await follow(page);
     // capturar infos do profile
     let infos = await getInfosProfile(page)
-    const link = `https://www.instagram.com/${profileUser}`
-    let data = new Date();
-    data = formatarDataBrasileira(data);
+    if (!infos) {
+      infos = {
+
+        bio: '',
+        userName: profileUser,
+        nome: '',
+        link: '',
+        category: ''
+
+      }
+    }
+    console.log(infos);
+
+    const data = new Date();
+    const dataFormatada = formatarDataBrasileira(data);
+    //console.log(dataFormatada);
 
     const bio = infos.bio;
     const nome = infos.nome;
     const linkProfile = infos.link;
     const category = infos.category;
     const originPub = idPub
-    await create(profileUser, link, data, 0, nome, bio, linkProfile, category, originPub)
+    await create(profileUser, link, dataFormatada, 0, nome, bio, linkProfile, category, originPub)
+    await deleteByUserName(profileUser)
 
-    console.log(infos);
+    //console.log(infos);
 
 
   }

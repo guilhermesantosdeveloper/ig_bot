@@ -7,7 +7,7 @@ const pino = require('../log');
 async function create(username, link,name='',bio='',linkProfile='',category='') {
   try {
     const db = aaSqlite3(new sqlite3.Database('./database.sqlite3'));
-    const sqlInsert = `INSERT INTO followers(username, link, name, bio, link_profile, category)
+    const sqlInsert = `INSERT OR IGNORE INTO followers(username, link, name, bio, link_profile, category)
   VALUES("${username}", "${link}", "${name}","${bio}", "${linkProfile}", "${category}")`
     await db.run(sqlInsert)
 

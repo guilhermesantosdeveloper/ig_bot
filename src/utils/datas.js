@@ -3,7 +3,7 @@ function formatarDataBrasileira(data) {
   const mes = String(data.getMonth() + 1).padStart(2, '0');
   const ano = String(data.getFullYear());
 
-  return `dia/mes/ano`;
+  return `${dia}/${mes}/${ano}`;
 }
 
 

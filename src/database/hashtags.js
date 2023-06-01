@@ -6,7 +6,7 @@ const pino = require('../log');
 async function create(name, numberPublications=null,category = null) {
   try {
     const db = aaSqlite3(new sqlite3.Database('./database.sqlite3'));
-    const sqlInsert = `INSERT INTO hashtags(name, category, number_publications)
+    const sqlInsert = `INSERT OR IGNORE INTO hashtags(name, category, number_publications)
   VALUES("${name}", "${category}", ${numberPublications})`
     await db.run(sqlInsert)
 
